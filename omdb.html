@@ -150,7 +150,7 @@
         var requisicao = new XMLHttpRequest();
 
         // PREPARAÇÃ ODE UMA NOVA REQUISIÇÃO DO TIPO GET NO ENDEREÇO[...] COM ASSINCRONISMO ATIVADO
-        requisicao.open('GET', 'http://www.omdbapi.com/?t='+titulo+'&apikey=a6c25aec&', true);
+        requisicao.open('GET', 'http://www.omdbapi.com/?t='+titulo+'&apikey=SUA_API_KEY', true);
 
         //AO CARREGAR A REQUISIÇÃO A FUNÇÃO SERÁ ATIVADA
         requisicao.onload = function ()
@@ -177,7 +177,7 @@
             console.log(' ');
             console.log(sinopse);
 
-            // INCLUINDO O RESULTADO NA DOM 
+            // INCLUINDO O RESULTADO NO DOCUMENTO
             document.getElementById('imagem').innerHTML = '<img src=' +poster+ ' class="img-responsive" alt="Poster do filme">';
 
             document.getElementById('ano').innerHTML += ano;
