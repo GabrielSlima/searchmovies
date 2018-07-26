@@ -1,0 +1,196 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Tabelas</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=width-device, initial-scale= 1.0">
+        <link rel="stylesheet" href="../../bootstrap/css/bootstrap.min.css">
+        <title>Tooltip</title>
+
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    </head>
+    <body>
+     <style type="text/css">
+     body,html
+     {
+         height: 100%;
+     }
+        .content
+        {
+            border: 1px solid red;
+            display: table;
+            width: 100%;
+            /* margin: 10px; */
+        }
+        .info
+        {
+            padding: 50px;
+        }
+        @media screen and (max-width: 768px)
+        {
+            .info img
+            {
+                width: 600px;
+                height: 900px;
+            }
+        }
+
+        @media screen and (min-width: 768px){
+            .info img 
+            {
+                width: 500px;
+                height: inherit;
+            }
+        }
+        
+     </style>
+      <nav class="nav navbar-fixed-top navbar-default ">
+          <div class="container">
+              <div class="navbar-header">
+                  <form action="omdb.html" class="navbar-form">
+                      <div class="form-group">
+                          <input type="text" class="form-control" placeholder="Buscar" name="nome" value="" id="campo">
+                      </div>
+
+                      <button type="submit" class="btn btn-success">Buscar</button>
+                  </form>
+              </div>
+          </div>
+
+      </nav>
+
+    <div class="content container">
+        <div class="items row">
+                <div class="info col-md-6" id="imagem">
+                    <!-- IMAGEM -->
+                </div>
+                <div class="info col-md-6" id="info">
+                    <!-- INFORMAÇÕES -->
+                    <h1>Titulo</h1>
+                    <ul class="list-group">
+                        <li class="list-group-item" id="ano"><strong>Ano:</strong> </li>
+                        <li class="list-group-item" id="duracao"><strong>Duração:</strong> </li>
+                        <li class="list-group-item" id="escritor"><strong>Escritores:</strong> </li>
+                        <li class="list-group-item" id="sinopse"><strong>Sinopse:</strong> </li>
+                       
+                        
+                    </ul>
+                </div>
+            
+        </div>
+    </div>
+
+      <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- INICIALIZAÇÃO DO TOOLTIP -->
+    <script type="text/javascript"> 
+
+    // FUNÇÃO PARA LER A URL EM BUSCA DO NOME DO FILME
+        function pegVal (nome)
+        {
+            // DECLARAÇÃO DE VARIAVEIS
+            var parametros = false;
+            var valor_parametro = false;
+
+            // querys RECEVE PARTE DA URL QUE VAI DO PONTO DE INTERROGAÇÃO ATÉ SEU ULTIMO CARACTERE
+            var querys = location.search.substring(0, location.search.length);
+
+            // parametros RECEBE UMA LISTA DE STRINGS QUE SÃO SEPARADAS A CADA "E" COMERCIAL
+            parametros = querys.split('&'); 
+            console.log('String passada: ' + nome);
+            console.log('Quantidade de parametros:');
+            console.log(parametros);
+
+            // PARA CADA ITEM DA LISTA
+            for( var i=0; i < parametros.length; i++){
+
+                //nome_parametro RECEBE DO PRIMEIRO CARACTERE APÓS O PONTO DE INTERROGAÇÃO ATÉ A POSIÇÃO DO SINAL DE IGUAL (O ULTI VALOR NÃO É INCLUSO)
+                nome_parametro = parametros[i].substring(1, parametros[i].indexOf('='));
+                console.log('Valor do parametro atual:');
+                console.log(parametros[i].substring(parametros[i].indexOf('=')+1));
+                
+                console.log('Query ao qual o valor pertence:')
+                console.log(nome_parametro);
+
+                // SE O nome_parametro FOR IGUAL Á QUERY, QUE É A PALAVRA CHAVE "nome" 
+                if (nome_parametro == nome)
+                {
+                    
+                    // O VALOR DESTE PARAMETRO É PASSADO PARA valor_parametro
+                    valor_parametro = parametros[i].substring(parametros[i].indexOf('=')+1);
+                    console.log('O titulo do filme é: ' + valor_parametro);
+                }
+                
+                if(valor_parametro)
+                {
+                    //SE valor_parametro NÃO FOR FALSO RETORNE-O
+                    return valor_parametro;
+                }
+                else
+                {
+                    //RETORNA INDEFINIDO
+                    return undefined;
+                }
+            }
+        }
+
+        // titulo RECEBE O VALOR RETORNADO DA FUNÇÃO
+        var titulo = pegVal('nome');
+        console.log(titulo);
+
+        // ****************INICIO AJAX****************
+        
+        // NOVO OBJETO REQUSICAO
+        var requisicao = new XMLHttpRequest();
+
+        // PREPARAÇÃ ODE UMA NOVA REQUISIÇÃO DO TIPO GET NO ENDEREÇO[...] COM ASSINCRONISMO ATIVADO
+        requisicao.open('GET', 'http://www.omdbapi.com/?t='+titulo+'&apikey=a6c25aec&', true);
+
+        //AO CARREGAR A REQUISIÇÃO A FUNÇÃO SERÁ ATIVADA
+        requisicao.onload = function ()
+        {
+            // CONVERSÃO DO RESULTADO EM JSON
+            var req = JSON.parse(requisicao.responseText);
+
+            // ATRIBUIÇÃO DOS VALORES DE CADA CHAVE Á UMA VARIAVEL
+            var title = req['Title'].toString();
+            var ano = req['Year'].toString();
+            var duracao = req['Runtime'].toString();
+            var escritor = req['Writer'].toString();
+            var poster = req['Poster'].toString();
+            var sinopse = req['Plot'].toString();
+
+            // APRESENTAÇÃO DESSES VALORES NO CONSOLE
+            console.log(title);
+            console.log(' ');
+            console.log(ano);
+            console.log(duracao);
+            console.log(' ');
+            console.log(escritor);
+            console.log(poster);
+            console.log(' ');
+            console.log(sinopse);
+
+            // INCLUINDO O RESULTADO NA DOM 
+            document.getElementById('imagem').innerHTML = '<img src=' +poster+ ' class="img-responsive" alt="Poster do filme">';
+
+            document.getElementById('ano').innerHTML += ano;
+            document.getElementById('duracao').innerHTML += duracao;
+            document.getElementById('escritor').innerHTML += escritor;
+            document.getElementById('sinopse').innerHTML += sinopse;
+            
+        };
+        
+        // ENVIO DA REQUISIÇÃO
+        requisicao.send(null);
+    </script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="../../bootstrap/js/bootstrap.min.js"></script>
+    </body>
+</html>
